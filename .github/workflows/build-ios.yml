@@ -1,0 +1,31 @@
+name: Build iOS IPA
+on:
+  workflow_dispatch: # Permette di far partire la compilazione premendo un pulsante
+
+jobs:
+  build:
+    runs-on: macos-latest # Indica a GitHub di usare una macchina virtuale Mac gratis
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-apple-ios
+
+      - name: Install dependencies
+        run: |
+          brew install xcodegen
+
+      - name: Build IPA
+        run: |
+          # Esegue lo script fornito dallo sviluppatore bypassando la firma del Team ID
+          FREE=1 BUNDLE_ID=com.muguet.mytarget ./make-ios.sh --ipa
+        continue-on-error: true
+
+      - name: Upload IPA Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Muguet-iOS-IPA
+          path: build/*.ipa
