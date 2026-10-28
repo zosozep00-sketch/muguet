@@ -11,7 +11,7 @@ jobs:
 
       - name: Install Rust and iOS Targets Manually
         run: |
-          curl --proto '=https' --tlsv1.2 -sSf https://rustup.rs | sh -s -- -y
+          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
           source $HOME/.cargo/env
           rustup default stable
           rustup target add aarch64-apple-ios
