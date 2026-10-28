@@ -15,14 +15,13 @@ jobs:
 
       - name: Build IPA
         run: |
-          # Forza l'installazione del target iOS ovunque nel sistema prima di partire
-          rustup target add aarch64-apple-ios
+          # Rimuove i file di configurazione locale di Rust che bloccano il target iOS
+          rm -f rust-toolchain
+          rm -f rust-toolchain.toml
           
-          # Modifica lo script make-ios.sh inserendo l'installazione del target iOS 
-          # subito dopo l'inizio dello script per intercettare qualsiasi toolchain locale
-          sed -i '' '2i\
+          # Imposta la versione stabile globale e installa il target
+          rustup default stable
           rustup target add aarch64-apple-ios
-          ' ./make-ios.sh
           
           FREE=1 BUNDLE_ID=com.muguet.mytarget ./make-ios.sh --ipa
         continue-on-error: true
