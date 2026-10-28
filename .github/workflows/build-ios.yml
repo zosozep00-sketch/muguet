@@ -15,14 +15,13 @@ jobs:
 
       - name: Build IPA
         run: |
-          # Rimuove i file di configurazione locale di Rust che bloccano il target iOS
-          rm -f rust-toolchain
-          rm -f rust-toolchain.toml
-          
-          # Imposta la versione stabile globale e installa il target
-          rustup default stable
+          # 1. Installa il target in modo sicuro
           rustup target add aarch64-apple-ios
           
+          # 2. Compila preventivamente tutte le dipendenze forzando il target iOS corretto
+          cargo build --target aarch64-apple-ios --release
+          
+          # 3. Lancia lo script finale che ora troverà i pacchetti (tra cui bitflags) già pronti
           FREE=1 BUNDLE_ID=com.muguet.mytarget ./make-ios.sh --ipa
         continue-on-error: true
 
