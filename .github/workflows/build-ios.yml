@@ -9,20 +9,17 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Install Rust and iOS Target globally
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-apple-ios
+
       - name: Install dependencies
         run: |
           brew install xcodegen
 
       - name: Build IPA
         run: |
-          # Identifica la versione di Rust richiesta dal progetto e forza l'installazione del target al suo interno
-          ACTIVE_TOOLCHAIN=$(rustup show active-toolchain | awk '{print $1}')
-          rustup target add aarch64-apple-ios --toolchain $ACTIVE_TOOLCHAIN
-          
-          # Aggiunge il target anche come comportamento predefinito globale
-          rustup default stable
-          rustup target add aarch64-apple-ios
-          
           FREE=1 BUNDLE_ID=com.muguet.mytarget ./make-ios.sh --ipa
         continue-on-error: true
 
