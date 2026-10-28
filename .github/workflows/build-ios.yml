@@ -12,10 +12,12 @@ jobs:
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@stable
         with:
+          toolchain: stable
           targets: aarch64-apple-ios
 
       - name: Install dependencies
         run: |
+          rustup target add aarch64-apple-ios
           brew install xcodegen
 
       - name: Build IPA
