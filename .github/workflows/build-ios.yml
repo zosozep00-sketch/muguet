@@ -1,21 +1,25 @@
-name: Build iOS IPA (Linux Runner)
+name: Build iOS IPA
 on:
   workflow_dispatch:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install Rust and iOS Targets
+      - name: Install Rust and iOS Targets Manually
         run: |
           curl --proto '=https' --tlsv1.2 -sSf https://rustup.rs | sh -s -- -y
           source $HOME/.cargo/env
           rustup default stable
           rustup target add aarch64-apple-ios
           echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+
+      - name: Install dependencies
+        run: |
+          brew install xcodegen
 
       - name: Build IPA
         run: |
